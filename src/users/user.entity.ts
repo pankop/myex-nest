@@ -1,10 +1,12 @@
 import { Exclude } from 'class-transformer';
+import { Item } from '../items/item.entity';
 import {
   AfterInsert,
   AfterRemove,
   AfterUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -20,8 +22,14 @@ export class User {
   email: string;
 
   @Column()
-  @Exclude() //ini interceptor agar password tidak nampak ketika dipanggil 
+  @Exclude() //ini interceptor agar password tidak nampak ketika dipanggil
   password: string;
+
+  @Column({ default: true })
+  admin: boolean;
+
+  @OneToMany(() => Item, (item) => item.user)
+  items: Item[];
 
   @AfterInsert() // ini namanya hook dijalankan setelah method crete
   logInsert() {
